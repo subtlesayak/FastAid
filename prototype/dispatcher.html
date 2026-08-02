@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FastAid Dispatch Console</title>
+    <link rel="stylesheet" href="dispatcher.css" />
+  </head>
+  <body>
+    <main class="dispatch-shell">
+      <aside class="sidebar">
+        <div class="brand"><span>Fast</span>Aid</div>
+        <nav aria-label="Dispatch navigation">
+          <button class="nav-button active" type="button">Live Ops</button>
+          <button class="nav-button" type="button">Incidents</button>
+          <button class="nav-button" type="button">Responders</button>
+          <button class="nav-button" type="button">Countries</button>
+          <button class="nav-button" type="button">Settings</button>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <header class="header">
+          <div>
+            <p class="eyebrow">Dispatch console</p>
+            <h1>Emergency Operations</h1>
+          </div>
+          <div class="header-actions">
+            <span class="status" id="serverStatus">Checking API</span>
+            <a class="app-link" href="/index-api.html">Open App</a>
+          </div>
+        </header>
+
+        <section class="metric-grid" aria-label="Operational metrics">
+          <article class="metric">
+            <span>Maps provider</span>
+            <strong id="mapsProvider">-</strong>
+          </article>
+          <article class="metric">
+            <span>Emergency country</span>
+            <strong id="countrySummary">-</strong>
+          </article>
+          <article class="metric">
+            <span>Nearby aid results</span>
+            <strong id="nearbyCount">-</strong>
+          </article>
+          <article class="metric">
+            <span>Last alert status</span>
+            <strong id="alertStatus">None</strong>
+          </article>
+        </section>
+
+        <section class="main-grid">
+          <article class="panel">
+            <div class="panel-title">
+              <div>
+                <p class="eyebrow">Create test incident</p>
+                <h2>Incident Intake</h2>
+              </div>
+            </div>
+            <form class="incident-form" id="incidentForm">
+              <label>
+                Type
+                <select id="incidentType">
+                  <option>Accident</option>
+                  <option>Medical</option>
+                  <option>Breakdown</option>
+                  <option>Fuel</option>
+                  <option>Police</option>
+                  <option>Fire</option>
+                </select>
+              </label>
+              <label>
+                People
+                <input id="peopleCount" type="number" min="0" value="2" />
+              </label>
+              <label class="wide">
+                Location
+                <input id="locationText" type="text" value="Connaught Place, New Delhi" />
+              </label>
+              <label class="wide">
+                Note
+                <textarea id="note" rows="4">Test dispatch from operations console</textarea>
+              </label>
+              <div class="button-row wide">
+                <button class="primary" type="submit">Create Incident</button>
+                <button class="secondary" id="refreshAid" type="button">Refresh Nearby Aid</button>
+              </div>
+            </form>
+          </article>
+
+          <article class="panel">
+            <div class="panel-title">
+              <div>
+                <p class="eyebrow">Responder workflow</p>
+                <h2>Current Alert</h2>
+              </div>
+              <span class="pill" id="alertId">No alert</span>
+            </div>
+            <div class="alert-card">
+              <div>
+                <span>Incident</span>
+                <strong id="currentIncident">None created</strong>
+              </div>
+              <div>
+                <span>Responder</span>
+                <strong id="currentResponder">Waiting</strong>
+              </div>
+              <div>
+                <span>ETA</span>
+                <strong id="currentEta">-</strong>
+              </div>
+              <div>
+                <span>Status</span>
+                <strong id="currentStatus">Idle</strong>
+              </div>
+            </div>
+            <div class="button-row">
+              <button class="primary" id="acceptAlert" type="button">Accept</button>
+              <button class="danger" id="declineAlert" type="button">Decline</button>
+            </div>
+          </article>
+        </section>
+
+        <section class="main-grid bottom-grid">
+          <article class="panel">
+            <div class="panel-title">
+              <div>
+                <p class="eyebrow">Nearby aid</p>
+                <h2>Ranked Results</h2>
+              </div>
+            </div>
+            <div class="aid-table" id="aidTable"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-title">
+              <div>
+                <p class="eyebrow">Country config</p>
+                <h2>Emergency Numbers</h2>
+              </div>
+            </div>
+            <div class="country-list" id="countryList"></div>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="dispatcher.js"></script>
+  </body>
+</html>

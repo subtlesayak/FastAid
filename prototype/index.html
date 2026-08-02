@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FastAid MVP Prototype</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell" aria-label="FastAid emergency assistance prototype">
+      <section class="phone-frame" aria-label="FastAid mobile app">
+        <div class="phone">
+          <header class="top-bar">
+            <button class="icon-button" type="button" aria-label="Open menu">
+              <span></span><span></span><span></span>
+            </button>
+            <h1><span>Fast</span>Aid</h1>
+            <button class="bell" type="button" aria-label="Notifications">3</button>
+          </header>
+
+          <section class="location-card" aria-label="Current location">
+            <div>
+              <strong id="currentLocation">Connaught Place</strong>
+              <span>New Delhi, India</span>
+            </div>
+            <button class="locate-button" type="button" aria-label="Use current location">⌖</button>
+          </section>
+
+          <section class="map-panel" aria-label="Live map">
+            <div class="map-grid"></div>
+            <div class="user-pulse" aria-label="Your location"></div>
+            <div class="marker marker-blue" style="--x: 22%; --y: 25%" data-place="Police Station">
+              <span>Police</span>
+            </div>
+            <div class="marker marker-red" style="--x: 78%; --y: 22%" data-place="City Hospital">
+              <span>Hospital</span>
+            </div>
+            <div class="marker marker-green" style="--x: 72%; --y: 54%" data-place="Auto Repair">
+              <span>Repair</span>
+            </div>
+            <div class="marker marker-green" style="--x: 20%; --y: 63%" data-place="Petrol Pump">
+              <span>Fuel</span>
+            </div>
+            <button class="map-action call-action" type="button" data-action="call">Call 112</button>
+            <button class="map-action share-action" type="button" data-action="share">Share</button>
+            <button class="sos-button" type="button" id="sosButton" aria-label="Send SOS alert">SOS</button>
+          </section>
+
+          <section class="quick-actions" aria-label="Nearby aid categories">
+            <div class="section-row">
+              <h2>Nearby Aid</h2>
+              <button class="link-button" type="button" data-tab="nearby">See all</button>
+            </div>
+            <div class="category-grid" id="categoryGrid"></div>
+          </section>
+
+          <section class="incident-card" aria-live="polite">
+            <span class="tag">Active incident</span>
+            <div class="incident-main">
+              <div>
+                <strong id="incidentTitle">Accident • 3 people</strong>
+                <span id="incidentPlace">Connaught Place, New Delhi</span>
+              </div>
+              <div class="incident-status">
+                <strong id="incidentStatus">Responder en route</strong>
+                <span id="incidentEta">1.8 km away • ETA 4 min</span>
+              </div>
+            </div>
+          </section>
+
+          <nav class="bottom-nav" aria-label="Primary navigation">
+            <button class="nav-item active" type="button" data-tab="sos">✚<span>SOS</span></button>
+            <button class="nav-item" type="button" data-tab="map">⌖<span>Map</span></button>
+            <button class="nav-item" type="button" data-tab="nearby">⌕<span>Nearby</span></button>
+            <button class="nav-item" type="button" data-tab="incidents">☷<span>Incidents</span></button>
+            <button class="nav-item" type="button" data-tab="profile">●<span>Profile</span></button>
+          </nav>
+        </div>
+      </section>
+
+      <aside class="workspace" aria-label="FastAid working panels">
+        <section class="panel control-panel">
+          <div class="panel-header">
+            <div>
+              <p class="label">Mode</p>
+              <h2 id="panelTitle">Emergency Console</h2>
+            </div>
+            <span class="status-pill" id="networkStatus">Online</span>
+          </div>
+
+          <div class="mode-tabs" role="tablist" aria-label="Workspace tabs">
+            <button class="mode-tab active" type="button" data-panel="console">Console</button>
+            <button class="mode-tab" type="button" data-panel="nearby">Nearby</button>
+            <button class="mode-tab" type="button" data-panel="responder">Responder</button>
+            <button class="mode-tab" type="button" data-panel="settings">Settings</button>
+          </div>
+
+          <div class="panel-view active" id="consolePanel">
+            <div class="safety-strip">
+              <div class="safety-icon">!</div>
+              <div>
+                <strong>Your safety is our priority</strong>
+                <span>Call official emergency services when life is at risk.</span>
+              </div>
+            </div>
+
+            <form class="report-form" id="incidentForm">
+              <label>
+                Incident type
+                <select id="incidentType">
+                  <option>Accident</option>
+                  <option>Medical</option>
+                  <option>Breakdown</option>
+                  <option>Fuel</option>
+                  <option>Police</option>
+                  <option>Fire</option>
+                </select>
+              </label>
+              <label>
+                People involved
+                <input id="peopleCount" type="number" min="0" value="3" />
+              </label>
+              <label>
+                Current location
+                <input id="locationInput" type="text" value="Connaught Place, New Delhi" />
+              </label>
+              <label>
+                Extra note
+                <textarea id="incidentNote" rows="3" placeholder="Vehicle type, injury, fuel type, or landmark"></textarea>
+              </label>
+              <div class="form-actions">
+                <button class="primary-button" type="submit">Notify Verified Responders</button>
+                <button class="secondary-button" type="button" id="findAidButton">Find Nearby Aid</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="panel-view" id="nearbyPanel">
+            <div class="filter-row" id="nearbyFilters">
+              <button class="filter-chip active" type="button" data-filter="all">All</button>
+              <button class="filter-chip" type="button" data-filter="verified">Verified</button>
+              <button class="filter-chip" type="button" data-filter="public">Public Place</button>
+            </div>
+            <div class="aid-list" id="aidList"></div>
+          </div>
+
+          <div class="panel-view" id="responderPanel">
+            <div class="responder-alert">
+              <div class="alert-top">
+                <span class="siren">⌁</span>
+                <div>
+                  <p class="label">Responder Alert</p>
+                  <h3 id="alertHeadline">New Emergency</h3>
+                </div>
+              </div>
+              <div class="alert-details">
+                <div><span>Location</span><strong>Connaught Place</strong></div>
+                <div><span>Distance</span><strong>1.8 km</strong></div>
+                <div><span>People</span><strong id="alertPeople">3</strong></div>
+                <div><span>Severity</span><strong>High</strong></div>
+                <div><span>Type</span><strong id="alertType">Accident</strong></div>
+                <div><span>Reported</span><strong>Now</strong></div>
+              </div>
+              <div class="form-actions">
+                <button class="primary-button" type="button" id="acceptButton">Accept</button>
+                <button class="danger-button" type="button" id="declineButton">Decline</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-view" id="settingsPanel">
+            <div class="settings-list">
+              <label class="toggle-row">
+                <span>Offline Mode</span>
+                <input type="checkbox" id="offlineToggle" />
+              </label>
+              <label class="toggle-row">
+                <span>Background Location</span>
+                <input type="checkbox" checked />
+              </label>
+              <label class="toggle-row">
+                <span>Push Notifications</span>
+                <input type="checkbox" checked />
+              </label>
+              <label class="toggle-row">
+                <span>SMS SOS</span>
+                <input type="checkbox" checked />
+              </label>
+            </div>
+            <div class="key-note">
+              <strong>Maps mode: mock provider</strong>
+              <span>Use backend env keys for Places and Routes. Keep browser keys restricted.</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel api-panel" aria-label="Architecture notes">
+          <div class="panel-header">
+            <div>
+              <p class="label">Architecture</p>
+              <h2>Maps + Dispatch Boundary</h2>
+            </div>
+          </div>
+          <div class="flow-list">
+            <div><span>1</span><p>User creates incident with location and category.</p></div>
+            <div><span>2</span><p>Maps provider finds public POIs by type and ETA.</p></div>
+            <div><span>3</span><p>FastAid matches verified responders from its own network.</p></div>
+            <div><span>4</span><p>Responder accepts, user sees ETA, route, and status.</p></div>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

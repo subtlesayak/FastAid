@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  web-backend:
+    name: Web and backend checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Static checks
+        run: npm run check
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Pilot artifact gate
+        run: npm run verify:pilot
+
+  android:
+    name: Android checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Android unit tests
+        working-directory: android
+        run: ./gradlew testDebugUnitTest
+
+      - name: Debug build
+        working-directory: android
+        run: ./gradlew assembleDebug

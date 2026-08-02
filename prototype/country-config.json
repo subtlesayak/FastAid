@@ -1,0 +1,30 @@
+{
+  "IN": {
+    "country": "India",
+    "emergencyNumber": "112",
+    "distanceUnit": "km",
+    "defaultLocation": "Connaught Place, New Delhi",
+    "poiCategories": ["hospital", "police", "fire_station", "gas_station", "car_repair", "tire_shop", "pharmacy", "electric_vehicle_charging_station"]
+  },
+  "US": {
+    "country": "United States",
+    "emergencyNumber": "911",
+    "distanceUnit": "mi",
+    "defaultLocation": "Times Square, New York",
+    "poiCategories": ["hospital", "police", "fire_station", "gas_station", "car_repair", "tire_shop", "pharmacy", "electric_vehicle_charging_station"]
+  },
+  "GB": {
+    "country": "United Kingdom",
+    "emergencyNumber": "999",
+    "distanceUnit": "mi",
+    "defaultLocation": "Trafalgar Square, London",
+    "poiCategories": ["hospital", "police", "fire_station", "gas_station", "car_repair", "tire_shop", "pharmacy", "electric_vehicle_charging_station"]
+  },
+  "AE": {
+    "country": "United Arab Emirates",
+    "emergencyNumber": "999",
+    "distanceUnit": "km",
+    "defaultLocation": "Downtown Dubai",
+    "poiCategories": ["hospital", "police", "fire_station", "gas_station", "car_repair", "tire_shop", "pharmacy", "electric_vehicle_charging_station"]
+  }
+}

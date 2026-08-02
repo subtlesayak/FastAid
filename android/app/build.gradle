@@ -1,0 +1,81 @@
+plugins {
+    id 'com.android.application'
+}
+
+def localProperties = new java.util.Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { stream ->
+        localProperties.load(stream)
+    }
+}
+
+def backendBaseUrl = localProperties.getProperty('FASTAID_BACKEND_URL')
+if (!backendBaseUrl) {
+    backendBaseUrl = System.getenv('FASTAID_BACKEND_URL')
+}
+if (!backendBaseUrl) {
+    backendBaseUrl = ''
+}
+
+def nonBlankPropertyOr = { propertyName, fallback ->
+    def value = localProperties.getProperty(propertyName)
+    return value != null && !value.trim().isEmpty() ? value.trim() : fallback
+}
+
+def debugMapsApiKey = nonBlankPropertyOr('MAPS_API_KEY', '')
+def debugPlacesApiKey = nonBlankPropertyOr('PLACES_API_KEY', debugMapsApiKey)
+def releaseMapsApiKey = nonBlankPropertyOr('RELEASE_MAPS_API_KEY', '')
+def releasePlacesApiKey = nonBlankPropertyOr('RELEASE_PLACES_API_KEY', releaseMapsApiKey)
+def asBuildConfigString = { value ->
+    '"' + value.replace('\\', '\\\\').replace('"', '\\"') + '"'
+}
+android {
+    namespace 'com.fastaid.app'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.fastaid.app'
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName '0.1.0'
+        manifestPlaceholders = [MAPS_API_KEY: '']
+        resValue 'string', 'fastaid_backend_base_url', backendBaseUrl
+    }
+
+    buildTypes {
+        debug {
+            // This client key is intentionally supplied only by ignored local.properties.
+            manifestPlaceholders = [MAPS_API_KEY: debugMapsApiKey]
+            buildConfigField 'String', 'PLACES_API_KEY', asBuildConfigString(debugPlacesApiKey)
+            buildConfigField 'boolean', 'MAPS_KEY_CONFIGURED', (!debugMapsApiKey.isEmpty()).toString()
+            buildConfigField 'boolean', 'IS_DEVELOPMENT_BUILD', 'true'
+        }
+
+        release {
+            // Production stays keyless until a separately restricted release key is configured.
+            manifestPlaceholders = [MAPS_API_KEY: releaseMapsApiKey]
+            buildConfigField 'String', 'PLACES_API_KEY', asBuildConfigString(releasePlacesApiKey)
+            buildConfigField 'boolean', 'MAPS_KEY_CONFIGURED', (!releaseMapsApiKey.isEmpty()).toString()
+            buildConfigField 'boolean', 'IS_DEVELOPMENT_BUILD', 'false'
+        }
+    }
+
+    buildFeatures {
+        buildConfig true
+        resValues true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'com.google.android.gms:play-services-maps:20.0.0'
+    implementation 'com.google.android.libraries.places:places:5.3.0'
+    implementation 'com.google.android.material:material:1.14.0'
+    testImplementation 'junit:junit:4.13.2'
+}

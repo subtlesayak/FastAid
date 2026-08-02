@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>FastAid Pilot Operations</title>
+    <link rel="stylesheet" href="operations.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#mainContent">Skip to operations</a>
+
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Pilot operations navigation">
+        <a class="brand" href="/operations.html" aria-label="FastAid Pilot Operations home">
+          <span>Fast</span>Aid
+          <small>Operations</small>
+        </a>
+
+        <nav class="side-nav" id="sideNav">
+          <button class="nav-button active" type="button" data-view="overview" aria-current="page">Overview</button>
+          <button class="nav-button" type="button" data-view="incidents">Incidents</button>
+          <button class="nav-button" type="button" data-view="responders">Responders</button>
+          <button class="nav-button" type="button" data-view="audit">Audit</button>
+          <button class="nav-button" type="button" data-view="system">System</button>
+        </nav>
+
+        <div class="pilot-boundary">
+          <strong>Controlled pilot</strong>
+          <span>Not an official dispatch console</span>
+        </div>
+      </aside>
+
+      <main class="workspace" id="mainContent">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow" id="pageEyebrow">Pilot operations</p>
+            <h1 id="pageTitle">Overview</h1>
+          </div>
+          <div class="topbar-actions">
+            <span class="status-chip neutral" id="apiStatus" role="status">Checking API</span>
+            <div class="signed-in" id="signedIn" hidden>
+              <span id="signedInUser"></span>
+              <button class="text-button" id="logoutButton" type="button">Sign out</button>
+            </div>
+            <a class="outlined-button" href="/index-api.html">Open user app</a>
+          </div>
+        </header>
+
+        <section class="sign-in-layout" id="signInView" aria-labelledby="signInTitle">
+          <div class="sign-in-copy">
+            <p class="eyebrow">Protected workspace</p>
+            <h2 id="signInTitle">Administrator sign in</h2>
+            <p>Use the pilot administrator account configured on this FastAid environment.</p>
+          </div>
+          <form class="sign-in-form" id="signInForm">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="username" required />
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required />
+
+            <p class="form-error" id="signInError" role="alert" hidden></p>
+            <button class="filled-button" id="signInButton" type="submit">Sign in</button>
+          </form>
+        </section>
+
+        <div id="operationsWorkspace" hidden>
+          <section class="metric-grid" aria-label="Pilot metrics">
+            <article class="metric">
+              <span>Open incidents</span>
+              <strong id="openIncidentMetric">0</strong>
+              <small id="openIncidentDetail">No data loaded</small>
+            </article>
+            <article class="metric">
+              <span>Pending responders</span>
+              <strong id="pendingResponderMetric">0</strong>
+              <small id="pendingResponderDetail">Awaiting review</small>
+            </article>
+            <article class="metric">
+              <span>Duplicate review</span>
+              <strong id="duplicateMetric">0</strong>
+              <small>Suggestions only</small>
+            </article>
+            <article class="metric">
+              <span>Pilot readiness</span>
+              <strong id="readinessMetric">Unknown</strong>
+              <small id="readinessDetail">Checking environment</small>
+            </article>
+          </section>
+
+          <section class="view active" data-view-panel="overview" aria-labelledby="overviewHeading">
+            <div class="two-column">
+              <section class="section-block">
+                <div class="section-heading">
+                  <div>
+                    <p class="eyebrow">Current workload</p>
+                    <h2 id="overviewHeading" tabindex="-1">Incident queue</h2>
+                  </div>
+                  <button class="text-button" type="button" data-open-view="incidents">View all</button>
+                </div>
+                <div class="data-list" id="overviewIncidents" aria-live="polite"></div>
+              </section>
+
+              <section class="section-block">
+                <div class="section-heading">
+                  <div>
+                    <p class="eyebrow">Needs attention</p>
+                    <h2>Responder review</h2>
+                  </div>
+                  <button class="text-button" type="button" data-open-view="responders">Open queue</button>
+                </div>
+                <div class="data-list" id="overviewResponders" aria-live="polite"></div>
+              </section>
+            </div>
+
+            <section class="section-block readiness-summary">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Deployment boundary</p>
+                  <h2>Readiness checks</h2>
+                </div>
+                <button class="text-button" id="refreshButton" type="button">Refresh data</button>
+              </div>
+              <div class="check-grid" id="overviewReadiness"></div>
+            </section>
+          </section>
+
+          <section class="view" data-view-panel="incidents" aria-labelledby="incidentsHeading" hidden>
+            <div class="section-heading page-section-heading">
+              <div>
+                <p class="eyebrow">Review only</p>
+                <h2 id="incidentsHeading" tabindex="-1">Incidents</h2>
+              </div>
+              <div class="toolbar" role="search">
+                <label class="field compact" for="incidentSearch">
+                  <span>Search</span>
+                  <input id="incidentSearch" type="search" placeholder="ID, place or type" />
+                </label>
+                <label class="field compact" for="incidentStatusFilter">
+                  <span>Status</span>
+                  <select id="incidentStatusFilter">
+                    <option value="all">All statuses</option>
+                    <option value="active">Active only</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="failed">Failed</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div class="incident-layout">
+              <section class="section-block flush">
+                <div class="data-list" id="incidentList" aria-live="polite"></div>
+              </section>
+              <aside class="section-block duplicate-panel" aria-labelledby="duplicateHeading">
+                <div class="section-heading">
+                  <div>
+                    <p class="eyebrow">No automatic merge</p>
+                    <h2 id="duplicateHeading">Possible duplicates</h2>
+                  </div>
+                </div>
+                <div class="data-list" id="duplicateList" aria-live="polite"></div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="view" data-view-panel="responders" aria-labelledby="respondersHeading" hidden>
+            <div class="section-heading page-section-heading">
+              <div>
+                <p class="eyebrow">Partner operations</p>
+                <h2 id="respondersHeading" tabindex="-1">Responders</h2>
+              </div>
+              <div class="toolbar" role="search">
+                <label class="field compact" for="responderSearch">
+                  <span>Search</span>
+                  <input id="responderSearch" type="search" placeholder="Name or service" />
+                </label>
+                <label class="field compact" for="verificationFilter">
+                  <span>Verification</span>
+                  <select id="verificationFilter">
+                    <option value="all">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="verified">Verified</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="suspended">Suspended</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <section class="section-block flush">
+              <div class="data-list" id="responderList" aria-live="polite"></div>
+            </section>
+          </section>
+
+          <section class="view" data-view-panel="audit" aria-labelledby="auditHeading" hidden>
+            <div class="section-heading page-section-heading">
+              <div>
+                <p class="eyebrow">Append-only record</p>
+                <h2 id="auditHeading" tabindex="-1">Audit activity</h2>
+              </div>
+              <label class="field compact" for="auditFilter">
+                <span>Action</span>
+                <select id="auditFilter">
+                  <option value="all">All actions</option>
+                  <option value="responder">Responder</option>
+                  <option value="incident">Incident</option>
+                  <option value="auth">Authentication</option>
+                </select>
+              </label>
+            </div>
+            <section class="section-block flush">
+              <div class="audit-list" id="auditList" aria-live="polite"></div>
+            </section>
+          </section>
+
+          <section class="view" data-view-panel="system" aria-labelledby="systemHeading" hidden>
+            <div class="section-heading page-section-heading">
+              <div>
+                <p class="eyebrow">Providers and configuration</p>
+                <h2 id="systemHeading" tabindex="-1">System status</h2>
+              </div>
+            </div>
+            <div class="two-column">
+              <section class="section-block">
+                <div class="section-heading"><h2>Readiness</h2></div>
+                <div class="data-list" id="systemReadiness"></div>
+              </section>
+              <section class="section-block">
+                <div class="section-heading"><h2>Notification attempts</h2></div>
+                <div class="data-list" id="notificationList"></div>
+              </section>
+            </div>
+            <section class="section-block">
+              <div class="section-heading"><h2>Country configuration</h2></div>
+              <div class="country-grid" id="countryList"></div>
+            </section>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <dialog class="status-dialog" id="statusDialog" aria-labelledby="statusDialogTitle">
+      <form id="statusForm">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">Partner verification</p>
+            <h2 id="statusDialogTitle">Change responder status</h2>
+          </div>
+          <button class="icon-button" id="closeStatusDialog" type="button" aria-label="Close dialog">×</button>
+        </div>
+        <p id="statusResponderName"></p>
+        <label class="field" for="newVerificationStatus">
+          <span>Status</span>
+          <select id="newVerificationStatus" required>
+            <option value="pending">Pending</option>
+            <option value="verified">Verified</option>
+            <option value="rejected">Rejected</option>
+            <option value="suspended">Suspended</option>
+          </select>
+        </label>
+        <label class="field" for="verificationReason">
+          <span>Audit note</span>
+          <textarea id="verificationReason" rows="3" maxlength="250" required></textarea>
+        </label>
+        <p class="dialog-warning" id="statusWarning"></p>
+        <div class="dialog-actions">
+          <button class="outlined-button" id="cancelStatusDialog" type="button">Cancel</button>
+          <button class="filled-button" type="submit">Apply status</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="operations.js"></script>
+  </body>
+</html>

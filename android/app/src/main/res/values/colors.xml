@@ -1,0 +1,17 @@
+<resources>
+    <color name="fastaid_red">#C62828</color>
+    <color name="fastaid_blue">#1565C0</color>
+    <color name="fastaid_green">#2E7D32</color>
+    <color name="fastaid_orange">#9A4D00</color>
+    <color name="fastaid_ink">#212121</color>
+    <color name="fastaid_muted">#616161</color>
+    <color name="fastaid_surface">#FFFFFF</color>
+    <color name="fastaid_background">#F5F6F8</color>
+    <color name="fastaid_card">#FFF0F0</color>
+    <color name="fastaid_soft_red">#FFE1E1</color>
+    <color name="fastaid_soft_blue">#E3F2FD</color>
+    <color name="fastaid_soft_green">#E8F5E9</color>
+    <color name="fastaid_surface_container">#F8FAFD</color>
+    <color name="fastaid_outline">#D8DEE6</color>
+    <color name="fastaid_nav_indicator">#FFE3E3</color>
+</resources>

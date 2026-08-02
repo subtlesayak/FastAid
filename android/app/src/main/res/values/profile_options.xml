@@ -1,0 +1,51 @@
+<resources>
+    <string-array name="blood_groups">
+        <item>Not set</item>
+        <item>A+</item>
+        <item>A-</item>
+        <item>B+</item>
+        <item>B-</item>
+        <item>AB+</item>
+        <item>AB-</item>
+        <item>O+</item>
+        <item>O-</item>
+        <item>Not sure</item>
+    </string-array>
+
+    <string-array name="india_languages">
+        <item>English</item>
+        <item>Hindi</item>
+        <item>Bengali</item>
+        <item>Telugu</item>
+        <item>Marathi</item>
+        <item>Tamil</item>
+        <item>Gujarati</item>
+        <item>Urdu</item>
+        <item>Kannada</item>
+        <item>Odia</item>
+        <item>Malayalam</item>
+    </string-array>
+
+    <string-array name="vehicle_types">
+        <item>Two-wheeler</item>
+        <item>Car</item>
+        <item>Auto-rickshaw</item>
+        <item>Taxi or cab</item>
+        <item>Van</item>
+        <item>Bus</item>
+        <item>Truck</item>
+        <item>Ambulance</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="vehicle_fuels">
+        <item>Petrol</item>
+        <item>Diesel</item>
+        <item>CNG</item>
+        <item>LPG</item>
+        <item>Hybrid</item>
+        <item>Electric</item>
+        <item>Other</item>
+    </string-array>
+</resources>
+

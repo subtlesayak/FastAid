@@ -1,0 +1,18 @@
+# Copy these values into android/local.properties. Never commit the real file.
+sdk.dir=C\:\\Users\\YourName\\AppData\\Local\\Android\\Sdk
+
+# Debug-only Android client key. It is compiled into app-debug.apk, so restrict it in
+# Google Cloud to package com.fastaid.app plus your debug signing SHA-1, and only the
+# Maps SDK for Android and Places API (New). Leave release keys unset for now.
+MAPS_API_KEY=your_debug_android_restricted_key
+
+# Optional only when deliberately preparing a signed production release. Use a
+# separate key restricted to the release certificate SHA-1, never the debug key.
+# RELEASE_MAPS_API_KEY=your_release_android_restricted_key
+# RELEASE_PLACES_API_KEY=your_release_android_restricted_key
+
+# Local physical-device testing with adb reverse:
+FASTAID_BACKEND_URL=http://127.0.0.1:4173
+
+# Controlled pilot build:
+# FASTAID_BACKEND_URL=https://api.example.org
