@@ -149,6 +149,10 @@ final class GooglePlacesRepository {
             int rightRelevance = ServiceQualityScanner.relevanceRank(incidentType, right);
             int relevance = Integer.compare(leftRelevance, rightRelevance);
             if (relevance != 0) return relevance;
+            int incidentFit = Integer.compare(
+                    incidentCategoryRank(incidentType, left),
+                    incidentCategoryRank(incidentType, right));
+            if (incidentFit != 0) return incidentFit;
             int availability = Integer.compare(availabilityRank(left), availabilityRank(right));
             if (availability != 0) return availability;
             int quality = Integer.compare(
@@ -160,6 +164,23 @@ final class GooglePlacesRepository {
             if (distance != 0) return distance;
             return left.name.compareToIgnoreCase(right.name);
         });
+    }
+
+    private static int incidentCategoryRank(String incidentType, AidPlace place) {
+        String type = incidentType == null ? "accident" : incidentType.toLowerCase(Locale.US);
+        String category = place == null || place.category == null
+                ? "" : place.category.toLowerCase(Locale.US);
+        if (type.contains("accident") || type.contains("emergency")) {
+            if (category.contains("medical") || category.contains("hospital")
+                    || category.contains("clinic")) return 0;
+            if (category.contains("fire")) return 1;
+            if (category.contains("police")) return 2;
+        }
+        if (type.contains("medical")) {
+            if (category.contains("medical") || category.contains("hospital")) return 0;
+            if (category.contains("clinic")) return 1;
+        }
+        return 5;
     }
 
     private static int availabilityRank(AidPlace place) {
@@ -217,6 +238,9 @@ final class GooglePlacesRepository {
         }
         if (type.contains("atm")) {
             return Collections.singletonList("atm");
+        }
+        if (type.contains("ngo") || type.contains("non_profit") || type.contains("nonprofit")) {
+            return Arrays.asList("non_profit_organization", "association_or_organization", "community_center");
         }
         if (type.contains("medical")) {
             return Arrays.asList(
@@ -305,6 +329,8 @@ final class GooglePlacesRepository {
         if (type.contains("restaurant") || type.contains("cafe") || type.contains("convenience")) return "food";
         if (type.contains("hotel") || type.contains("lodging")) return "lodging";
         if (type.contains("atm")) return "atm";
+        if (type.contains("non_profit") || type.contains("association_or_organization")
+                || type.contains("community_center")) return "ngo";
         if (type.contains("ebike") || type.contains("e_bike")) return "ev";
         if (type.contains("hospital") || type.contains("doctor")) return "medical";
         if (type.contains("police")) return "police";
@@ -324,6 +350,7 @@ final class GooglePlacesRepository {
         if (category.contains("repair") || category.contains("tire") || category.contains("auto_parts")) return 5;
         if (category.contains("atm") || category.contains("toilet") || category.contains("parking")) return 6;
         if (category.contains("food") || category.contains("lodging") || category.contains("rest_stop")) return 7;
+        if (category.contains("ngo")) return 8;
         if (category.contains("point_of_interest") || category.contains("establishment")
                 || category.contains("local_government") || category.equals("aid")) return 90;
         return 50;

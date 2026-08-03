@@ -170,6 +170,7 @@ final class MapPreviewView extends View {
         if (type.contains("gas")) return "Fuel";
         if (type.contains("repair") || type.contains("tire") || type.contains("tow")) return "Repair";
         if (type.contains("electric")) return "EV";
+        if (type.contains("ngo")) return "NGO";
         return "Aid";
     }
 
@@ -178,6 +179,7 @@ final class MapPreviewView extends View {
         if (type.contains("hospital") || type.contains("pharmacy") || type.contains("fire")) return Color.rgb(229, 57, 53);
         if (type.contains("police")) return Color.rgb(30, 136, 229);
         if (type.contains("gas") || type.contains("electric")) return Color.rgb(251, 140, 0);
+        if (type.contains("ngo")) return Color.rgb(21, 101, 192);
         return Color.rgb(67, 160, 71);
     }
 

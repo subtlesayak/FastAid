@@ -46,6 +46,8 @@ public class GooglePlacesRepositoryTest {
                 GooglePlacesRepository.includedTypes("ebike"));
         assertEquals(Collections.singletonList("atm"),
                 GooglePlacesRepository.includedTypes("atm"));
+        assertEquals(Arrays.asList("non_profit_organization", "association_or_organization", "community_center"),
+                GooglePlacesRepository.includedTypes("ngo"));
         assertEquals(Collections.singletonList("gas_station"),
                 GooglePlacesRepository.includedTypes("fuel"));
         assertEquals(Collections.singletonList("electric_vehicle_charging_station"),
@@ -198,6 +200,8 @@ public class GooglePlacesRepositoryTest {
         assertEquals("car_wash", GooglePlacesRepository.normalizeCategory("car_wash"));
         assertEquals("ev", GooglePlacesRepository.normalizeCategory("ebike_charging_station"));
         assertEquals("atm", GooglePlacesRepository.normalizeCategory("atm"));
+        assertEquals("ngo", GooglePlacesRepository.normalizeCategory("non_profit_organization"));
+        assertEquals("ngo", GooglePlacesRepository.normalizeCategory("association_or_organization"));
     }
 
     @Test
@@ -210,6 +214,8 @@ public class GooglePlacesRepositoryTest {
                 "point_of_interest", Arrays.asList("car_repair", "establishment")));
         assertEquals("atm", GooglePlacesRepository.normalizeCategory(
                 "establishment", Arrays.asList("finance", "atm")));
+        assertEquals("ngo", GooglePlacesRepository.normalizeCategory(
+                "point_of_interest", Arrays.asList("establishment", "non_profit_organization")));
     }
 
     @Test
@@ -226,5 +232,24 @@ public class GooglePlacesRepositoryTest {
                 place("Battery and Parts", "500 m", true, true, true, "auto_parts")));
         assertEquals("BEST MATCH", ServiceQualityScanner.label("workshop",
                 place("Vehicle Workshop", "500 m", true, true, true, "repair")));
+        assertEquals("BEST MATCH", ServiceQualityScanner.label("ngo",
+                place("Community Relief Foundation", "500 m", true, true, true, "ngo")));
+        assertEquals("CHECK CATEGORY", ServiceQualityScanner.label("ngo",
+                place("Nearby Restaurant", "200 m", true, true, true, "food")));
+        assertEquals("CHECK FIRST", ServiceQualityScanner.label("ngo",
+                place("Reflex Fitness", "50 m", true, true, true, "ngo")));
+        assertEquals("CHECK FIRST", ServiceQualityScanner.label("rest_stop",
+                place("SVM Fastag Agency", "5.0 km", true, true, true, "rest_stop")));
+        assertEquals("CHECK FIRST", ServiceQualityScanner.label("medical_lab",
+                place("Pulse Polio Booth", "900 m", false, false, true, "medical_lab")));
+        assertEquals("CHECK FIRST", ServiceQualityScanner.label("clinic",
+                place("AGS Pharmaceuticals", "109 m", false, false, true, "clinic")));
+        assertEquals("CHECK FIRST", ServiceQualityScanner.label("parking",
+                place("Classic Bullet Point", "953 m", true, true, true, "parking")));
+        assertEquals("CHECK FIRST", ServiceQualityScanner.label("parking",
+                place("Car Garage", "755 m", false, false, false, "parking")));
+        assertEquals("CHECK FIRST", ServiceQualityScanner.label("ngo",
+                place("Dhanavrudhhi Co-operative Society Ltd. Stamp Papers",
+                        "119 m", false, false, true, "ngo")));
     }
 }
